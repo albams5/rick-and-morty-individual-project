@@ -1,0 +1,36 @@
+header{
+    background-color: #3c035f;
+}
+header h2{
+    color: white;
+}
+footer{
+    background-color:#3c035f;
+    color: white;
+}
+.btn-custom{
+    background-color:#3c035f;
+    color: white;
+    border-color: #8FC748;
+}
+.btn-custom:hover{
+    background-color:#8FC748;
+    border-color:#3c035f;
+    color:#3c035f;
+}
+.btn-custom:active{
+    background-color:#3c035f !important;
+    color: white !important;
+    border-color: #8FC748 !important;
+}
+.css-list{
+    scroll-snap-type: y mandatory;
+    overflow-y: scroll;
+    max-height: 430px;
+}
+::-webkit-scrollbar {
+    width: 12px; /* Ancho de la barra de desplazamiento */
+}
+::-webkit-scrollbar-thumb {
+    background-color: #8FC748;
+}

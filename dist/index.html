@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">    <title>Rick and Morty Website</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+<body>
+    <div class="container">
+        <header class="row align-items-center py-4 rounded">
+          <div class="col-2">
+            <!-- Imagen a la izquierda -->
+            <img src="rick-and-morty-portal-moon.png" alt="Imagen" class="w-100 h-100">
+          </div>
+          <div class="col-8 text-center">
+            <!-- Frase breve centrada -->
+            <h2>Rick & Morty Frikipedia</h2>
+          </div>
+        </header>
+    
+        <div class="row">
+          <div class="col-md-3">
+            <!-- Listado a la izquierda (ocupando 1/4 del ancho) -->
+            <ul class="list-group css-list">
+            </ul>
+            <div class="d-flex justify-content-center">
+              <button type="button" class="btn btn-primary mt-3 btn-custom" id="moreEpisodesBtn">More Episodes</button>
+              <button type="button" class="btn btn-primary mt-3 d-none btn-custom" id="lastEpisodesBtn">More Episodes</button>
+              <button type="button" class="btn btn-primary mt-3 d-none btn-custom" id="firstEpisodesBtn">First Episodes</button>
+            </div>
+          </div>
+          <div class="container col-md-9">
+            <!-- Div contenedor (ocupando el resto del ancho) -->
+            <div class="border p-3" id="central-div">
+              <!-- Contenido del div contenedor -->
+              <!-- <h3 id="episode-title">Pilot</h3>
+              <p id="episode-date">December 2, 2013</p>
+              <p id="episode-code">S01E01</p> -->
+              <div class="card" style="width: 18rem;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">Card title</h5>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer class="row align-items-center py-4 mt-4 rounded">
+          <div class="col-12 text-center">
+              <!-- Contenido del footer -->
+              <p>&copy; 2024 Rick & Morty Frikipedia. Todos los derechos reservados.</p>
+          </div>
+      </footer>
+      </div>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>    <script src="index.js"></script>
+</body>
+</html>
