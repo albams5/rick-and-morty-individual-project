@@ -9,6 +9,12 @@ fetch(urlEpisodesOne)
         getEpisodes(episode);
     });
 });
+var Status;
+(function (Status) {
+    Status["Alive"] = "Alive";
+    Status["Dead"] = "Dead";
+    Status["Unknown"] = "Unknown";
+})(Status || (Status = {}));
 function getEpisodes(episode) {
     const listGroup = document.querySelector(".list-group");
     const li = document.createElement("li");
@@ -75,9 +81,24 @@ function showEpisodeInfo(episode) {
 }
 function paintCharactersInfo(data) {
     console.log(data);
+    const centralDiv = document.querySelector("#central-div");
     const divCharacter = document.createElement("div");
     divCharacter.classList.add("card");
     divCharacter.style.width = "18rem";
+    const img = document.createElement("img");
+    img.src = data.image;
+    img.classList.add("card-img-top");
+    img.alt = data.name;
+    const cardBody = document.createElement("div");
+    cardBody.classList.add("card-body");
+    const characterName = document.createElement("h5");
+    characterName.textContent = data.name;
+    const characterStatus = document.createElement("p");
+    characterStatus.textContent = data.status;
+    centralDiv === null || centralDiv === void 0 ? void 0 : centralDiv.appendChild(divCharacter);
+    divCharacter.appendChild(img);
+    divCharacter.appendChild(cardBody);
+    cardBody.append(characterName, characterStatus);
 }
 function cleanCard() {
     const centralDiv = document.querySelector("#central-div");
