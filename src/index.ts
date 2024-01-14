@@ -23,6 +23,19 @@ fetch(urlEpisodesOne)
         species: string,
         gender: string,
         image: string,
+        location: Locations,
+        origin: Origin,
+    }
+
+    type Origin = {
+        name: string,
+        url: string,
+    }
+    type Locations = {
+        name: string,
+        type: string,
+        dimension: string,
+        url: string,
     }
 
     enum Status {
@@ -115,12 +128,23 @@ fetch(urlEpisodesOne)
         cardBody.classList.add("card-body");
         const characterName = document.createElement("h5");
         characterName.textContent = data.name;
-        const characterStatus = document.createElement("p");
-        characterStatus.textContent = data.status;
+        const characterStatusAndSpecies = document.createElement("p");
+        characterStatusAndSpecies.textContent = `${data.status} - ${data.species}`;
+        // const characterGender = document.createElement("p");
+        // characterGender.textContent = data.gender;
         centralDiv?.appendChild(divCharacter);
         divCharacter.appendChild(img);
         divCharacter.appendChild(cardBody);
-        cardBody.append(characterName, characterStatus);
+        cardBody.append(characterName, characterStatusAndSpecies);
+
+        let hasClicked = false;
+
+        divCharacter.addEventListener("click", ()=>{
+            if(!hasClicked){
+                showMoreCharacterInfo(data, cardBody);
+                hasClicked = true;
+            }
+            })
     }
 
     function cleanCard(){
@@ -129,4 +153,13 @@ fetch(urlEpisodesOne)
             centralDiv.innerHTML = "";
         }
 
+    }
+    
+    function showMoreCharacterInfo(data:Character, cardBody:HTMLElement){
+        console.log("dentro de showmorecharacterinfo");
+            const characterGender = document.createElement("p");
+            characterGender.textContent = data.gender;
+            const characterOrigin = document.createElement("p");
+            characterOrigin.textContent = `Origin: ${data.origin.name}`;
+            cardBody?.append(characterGender, characterOrigin);
     }

@@ -93,17 +93,32 @@ function paintCharactersInfo(data) {
     cardBody.classList.add("card-body");
     const characterName = document.createElement("h5");
     characterName.textContent = data.name;
-    const characterStatus = document.createElement("p");
-    characterStatus.textContent = data.status;
+    const characterStatusAndSpecies = document.createElement("p");
+    characterStatusAndSpecies.textContent = `${data.status} - ${data.species}`;
     centralDiv === null || centralDiv === void 0 ? void 0 : centralDiv.appendChild(divCharacter);
     divCharacter.appendChild(img);
     divCharacter.appendChild(cardBody);
-    cardBody.append(characterName, characterStatus);
+    cardBody.append(characterName, characterStatusAndSpecies);
+    let hasClicked = false;
+    divCharacter.addEventListener("click", () => {
+        if (!hasClicked) {
+            showMoreCharacterInfo(data, cardBody);
+            hasClicked = true;
+        }
+    });
 }
 function cleanCard() {
     const centralDiv = document.querySelector("#central-div");
     if (centralDiv) {
         centralDiv.innerHTML = "";
     }
+}
+function showMoreCharacterInfo(data, cardBody) {
+    console.log("dentro de showmorecharacterinfo");
+    const characterGender = document.createElement("p");
+    characterGender.textContent = data.gender;
+    const characterOrigin = document.createElement("p");
+    characterOrigin.textContent = `Origin: ${data.origin.name}`;
+    cardBody === null || cardBody === void 0 ? void 0 : cardBody.append(characterGender, characterOrigin);
 }
 //# sourceMappingURL=index.js.map
