@@ -82,9 +82,9 @@ function showEpisodeInfo(episode) {
 function paintCharactersInfo(data) {
     console.log(data);
     const centralDiv = document.querySelector("#central-div");
+    centralDiv === null || centralDiv === void 0 ? void 0 : centralDiv.classList.add("border");
     const divCharacter = document.createElement("div");
-    divCharacter.classList.add("card");
-    divCharacter.style.width = "18rem";
+    divCharacter.classList.add("card", "card-custom");
     const img = document.createElement("img");
     img.src = data.image;
     img.classList.add("card-img-top");
@@ -99,12 +99,8 @@ function paintCharactersInfo(data) {
     divCharacter.appendChild(img);
     divCharacter.appendChild(cardBody);
     cardBody.append(characterName, characterStatusAndSpecies);
-    let hasClicked = false;
     divCharacter.addEventListener("click", () => {
-        if (!hasClicked) {
-            showMoreCharacterInfo(data, cardBody);
-            hasClicked = true;
-        }
+        showMoreCharacterInfo(data, cardBody);
     });
 }
 function cleanCard() {
@@ -114,11 +110,36 @@ function cleanCard() {
     }
 }
 function showMoreCharacterInfo(data, cardBody) {
-    console.log("dentro de showmorecharacterinfo");
-    const characterGender = document.createElement("p");
-    characterGender.textContent = data.gender;
-    const characterOrigin = document.createElement("p");
-    characterOrigin.textContent = `Origin: ${data.origin.name}`;
-    cardBody === null || cardBody === void 0 ? void 0 : cardBody.append(characterGender, characterOrigin);
+    cleanCard();
+    const centralDiv = document.querySelector("#central-div");
+    centralDiv === null || centralDiv === void 0 ? void 0 : centralDiv.classList.remove("border");
+    const characterMainInfo = document.getElementById("character-main-info");
+    const characterEpisodes = document.getElementById("character-episodes");
+    characterMainInfo === null || characterMainInfo === void 0 ? void 0 : characterMainInfo.classList.remove("d-none");
+    characterEpisodes === null || characterEpisodes === void 0 ? void 0 : characterEpisodes.classList.remove("d-none");
+    const characterPic = document.getElementById("character-pic");
+    characterPic === null || characterPic === void 0 ? void 0 : characterPic.setAttribute("src", data.image);
+    characterPic === null || characterPic === void 0 ? void 0 : characterPic.setAttribute("alt", data.name);
+    const characterName = document.getElementById("character-name");
+    const characterProperties = document.getElementById("character-properties");
+    if (characterName && characterProperties) {
+        characterName.textContent = data.name;
+        characterProperties.textContent = `${data.status} | ${data.gender} | ${data.species}`;
+        const episodesInShow = data.episode;
+        console.log(episodesInShow[0]);
+        episodesInShow.forEach((episode) => {
+            fetch(episode)
+                .then(response => response.json())
+                .then((episode) => paintEpisodesinShow(episode));
+        });
+    }
+    function paintEpisodesinShow(episode) {
+        console.log(episode.name);
+        const containerEpisodes = document.getElementById("character-episodes");
+        const episodesInShow = document.createElement("div");
+        episodesInShow.classList.add("col-md-3", "m-2", "bg-primary", "p-3", "text-white");
+        episodesInShow.textContent = episode.name;
+        containerEpisodes === null || containerEpisodes === void 0 ? void 0 : containerEpisodes.appendChild(episodesInShow);
+    }
 }
 //# sourceMappingURL=index.js.map

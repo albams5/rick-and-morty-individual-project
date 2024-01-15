@@ -34,3 +34,15 @@ footer{
 ::-webkit-scrollbar-thumb {
     background-color: #8FC748;
 }
+
+.card-custom{
+    width: 18rem;
+}
+
+.card-body-custom{
+    width: 18rem;
+}
+
+/* .central-div-custom{
+    border: none;
+} */

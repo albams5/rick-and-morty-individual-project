@@ -25,6 +25,7 @@ fetch(urlEpisodesOne)
         image: string,
         location: Locations,
         origin: Origin,
+        episode: string[],
     }
 
     type Origin = {
@@ -88,7 +89,7 @@ fetch(urlEpisodesOne)
                 })
             })
     }
-
+    
     function showEpisodeInfo(episode:Episode){
         console.log(episode.characters)
         cleanCard();
@@ -117,9 +118,9 @@ fetch(urlEpisodesOne)
     function paintCharactersInfo(data:Character){
         console.log(data)
         const centralDiv = document.querySelector("#central-div");
+        centralDiv?.classList.add("border");
         const divCharacter = document.createElement("div");
-        divCharacter.classList.add("card");
-        divCharacter.style.width = "18rem";
+        divCharacter.classList.add("card", "card-custom");
         const img = document.createElement("img");
         img.src = data.image;
         img.classList.add("card-img-top");
@@ -130,20 +131,13 @@ fetch(urlEpisodesOne)
         characterName.textContent = data.name;
         const characterStatusAndSpecies = document.createElement("p");
         characterStatusAndSpecies.textContent = `${data.status} - ${data.species}`;
-        // const characterGender = document.createElement("p");
-        // characterGender.textContent = data.gender;
         centralDiv?.appendChild(divCharacter);
         divCharacter.appendChild(img);
         divCharacter.appendChild(cardBody);
         cardBody.append(characterName, characterStatusAndSpecies);
 
-        let hasClicked = false;
-
         divCharacter.addEventListener("click", ()=>{
-            if(!hasClicked){
                 showMoreCharacterInfo(data, cardBody);
-                hasClicked = true;
-            }
             })
     }
 
@@ -154,12 +148,37 @@ fetch(urlEpisodesOne)
         }
 
     }
-    
+
     function showMoreCharacterInfo(data:Character, cardBody:HTMLElement){
-        console.log("dentro de showmorecharacterinfo");
-            const characterGender = document.createElement("p");
-            characterGender.textContent = data.gender;
-            const characterOrigin = document.createElement("p");
-            characterOrigin.textContent = `Origin: ${data.origin.name}`;
-            cardBody?.append(characterGender, characterOrigin);
+        cleanCard();
+        const centralDiv = document.querySelector("#central-div");
+        centralDiv?.classList.remove("border");
+        const characterMainInfo = document.getElementById("character-main-info");
+        const characterEpisodes = document.getElementById("character-episodes");
+        characterMainInfo?.classList.remove("d-none");
+        characterEpisodes?.classList.remove("d-none");
+        const characterPic = document.getElementById("character-pic");
+        characterPic?.setAttribute("src", data.image);
+        characterPic?.setAttribute("alt", data.name);
+        const characterName = document.getElementById("character-name");
+        const characterProperties = document.getElementById("character-properties");
+        if(characterName && characterProperties){
+            characterName.textContent = data.name;
+            characterProperties.textContent = `${data.status} | ${data.gender} | ${data.species}`;
+            const episodesInShow = data.episode;
+            console.log(episodesInShow[0])
+            episodesInShow.forEach((episode)=>{
+                fetch(episode)
+                .then(response => response.json())
+                .then((episode)=>paintEpisodesinShow(episode))
+            })
+        }
+        function paintEpisodesinShow(episode:Episode){
+            console.log(episode.name);
+            const containerEpisodes = document.getElementById("character-episodes");
+            const episodesInShow = document.createElement("div");
+            episodesInShow.classList.add("col-md-3", "m-2", "bg-primary", "p-3", "text-white");
+            episodesInShow.textContent = episode.name;
+            containerEpisodes?.appendChild(episodesInShow);
+        }
     }
