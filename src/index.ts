@@ -15,6 +15,7 @@ fetch(urlEpisodesOne)
         air_date: string,
         episode: string,
         characters: string[],
+        url: string
     }
 
     type Character = {
@@ -92,7 +93,8 @@ fetch(urlEpisodesOne)
     
     function showEpisodeInfo(episode:Episode){
         console.log(episode.characters)
-        cleanCard();
+        // cleanCard();        
+        const characterCard = document.getElementById("character-card");
         const centralDiv = document.getElementById("central-div");
         const episodeTitle = document.createElement("h3");
         const episodeDate = document.createElement("p");
@@ -105,6 +107,7 @@ fetch(urlEpisodesOne)
         episodeTitle.textContent = episode.name;
         episodeDate.textContent = episode.air_date;
         episodeCode.textContent = episode.episode;
+        
         centralDiv?.append(episodeTitle, episodeDate, episodeCode);
         
         const characters = episode.characters;
@@ -113,6 +116,10 @@ fetch(urlEpisodesOne)
                 .then(response => response.json())
                 .then((data)=>paintCharactersInfo(data))
         })
+        if(characterCard){
+            characterCard.innerHTML = "";
+            console.log("dentro del if");
+        }
     }
 
     function paintCharactersInfo(data:Character){
@@ -145,8 +152,14 @@ fetch(urlEpisodesOne)
         const centralDiv = document.querySelector("#central-div");
         if(centralDiv){
             centralDiv.innerHTML = "";
+            console.log("show more character info")
         }
-
+    }
+    function cleanCard2(){
+        const characterCard = document.getElementById("character-card");
+        if(characterCard){
+            characterCard.innerHTML = "";
+        }
     }
 
     function showMoreCharacterInfo(data:Character, cardBody:HTMLElement){
@@ -174,11 +187,18 @@ fetch(urlEpisodesOne)
             })
         }
         function paintEpisodesinShow(episode:Episode){
-            console.log(episode.name);
+            console.log(episode);
             const containerEpisodes = document.getElementById("character-episodes");
             const episodesInShow = document.createElement("div");
             episodesInShow.classList.add("col-md-3", "m-2", "bg-primary", "p-3", "text-white");
             episodesInShow.textContent = episode.name;
             containerEpisodes?.appendChild(episodesInShow);
+        }
+    }
+
+    function cleanEpisodesinShow(){
+        const containerEpisodes = document.getElementById("character-episodes");
+        if(containerEpisodes){
+            containerEpisodes.innerHTML = "";
         }
     }
