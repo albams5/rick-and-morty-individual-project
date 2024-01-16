@@ -11,10 +11,11 @@ fetch(urlEpisodesOne)
 });
 var Status;
 (function (Status) {
-    Status["Alive"] = "Alive";
-    Status["Dead"] = "Dead";
-    Status["Unknown"] = "Unknown";
+    Status["Alive"] = "ALIVE";
+    Status["Dead"] = "DEAD";
+    Status["Unknown"] = "UNKNOWN";
 })(Status || (Status = {}));
+console.log(Status.Unknown);
 function getEpisodes(episode) {
     const listGroup = document.querySelector(".list-group");
     const li = document.createElement("li");
@@ -60,7 +61,11 @@ function loadMoreEpisodes(url) {
 }
 function showEpisodeInfo(episode) {
     console.log(episode.characters);
-    const characterCard = document.getElementById("character-card");
+    cleanCard();
+    const characterCard = document.getElementById("character-main-info");
+    const characterEpisodes = document.getElementById("character-episodes");
+    characterCard === null || characterCard === void 0 ? void 0 : characterCard.classList.add('d-none');
+    characterEpisodes === null || characterEpisodes === void 0 ? void 0 : characterEpisodes.classList.add('d-none');
     const centralDiv = document.getElementById("central-div");
     const episodeTitle = document.createElement("h3");
     const episodeDate = document.createElement("p");
@@ -78,10 +83,6 @@ function showEpisodeInfo(episode) {
             .then(response => response.json())
             .then((data) => paintCharactersInfo(data));
     });
-    if (characterCard) {
-        characterCard.innerHTML = "";
-        console.log("dentro del if");
-    }
 }
 function paintCharactersInfo(data) {
     console.log(data);
@@ -100,28 +101,21 @@ function paintCharactersInfo(data) {
     const characterStatusAndSpecies = document.createElement("p");
     characterStatusAndSpecies.textContent = `${data.status} - ${data.species}`;
     centralDiv === null || centralDiv === void 0 ? void 0 : centralDiv.appendChild(divCharacter);
-    divCharacter.appendChild(img);
-    divCharacter.appendChild(cardBody);
+    divCharacter.append(img, cardBody);
     cardBody.append(characterName, characterStatusAndSpecies);
     divCharacter.addEventListener("click", () => {
-        showMoreCharacterInfo(data, cardBody);
+        showMoreCharacterInfo(data);
     });
 }
 function cleanCard() {
     const centralDiv = document.querySelector("#central-div");
     if (centralDiv) {
         centralDiv.innerHTML = "";
-        console.log("show more character info");
     }
 }
-function cleanCard2() {
-    const characterCard = document.getElementById("character-card");
-    if (characterCard) {
-        characterCard.innerHTML = "";
-    }
-}
-function showMoreCharacterInfo(data, cardBody) {
+function showMoreCharacterInfo(data) {
     cleanCard();
+    cleanEpisodesinShow();
     const centralDiv = document.querySelector("#central-div");
     centralDiv === null || centralDiv === void 0 ? void 0 : centralDiv.classList.remove("border");
     const characterMainInfo = document.getElementById("character-main-info");
@@ -133,30 +127,42 @@ function showMoreCharacterInfo(data, cardBody) {
     characterPic === null || characterPic === void 0 ? void 0 : characterPic.setAttribute("alt", data.name);
     const characterName = document.getElementById("character-name");
     const characterProperties = document.getElementById("character-properties");
-    if (characterName && characterProperties) {
+    const characterGender = document.getElementById("character-gender");
+    const characterSpecies = document.getElementById("character-species");
+    const characterLocation = document.getElementById("character-location");
+    if (characterName && characterProperties && characterGender && characterSpecies && characterLocation) {
         characterName.textContent = data.name;
-        characterProperties.textContent = `${data.status} | ${data.gender} | ${data.species}`;
-        const episodesInShow = data.episode;
-        console.log(episodesInShow[0]);
-        episodesInShow.forEach((episode) => {
-            fetch(episode)
-                .then(response => response.json())
-                .then((episode) => paintEpisodesinShow(episode));
-        });
+        characterProperties.textContent = `Status: ${data.status}`;
+        characterGender.textContent = `Gender: ${data.gender}`;
+        characterSpecies.textContent = `Species: ${data.species}`;
+        characterLocation.textContent = `Location: ${data.location.name}`;
     }
-    function paintEpisodesinShow(episode) {
-        console.log(episode);
-        const containerEpisodes = document.getElementById("character-episodes");
-        const episodesInShow = document.createElement("div");
-        episodesInShow.classList.add("col-md-3", "m-2", "bg-primary", "p-3", "text-white");
-        episodesInShow.textContent = episode.name;
-        containerEpisodes === null || containerEpisodes === void 0 ? void 0 : containerEpisodes.appendChild(episodesInShow);
-    }
+    characterLocation === null || characterLocation === void 0 ? void 0 : characterLocation.addEventListener("click", () => { showLocationInfo(); });
+    const episodesInShow = data.episode;
+    episodesInShow.forEach((episode) => {
+        fetch(episode)
+            .then(response => response.json())
+            .then((episode) => paintEpisodesinShow(episode));
+    });
+}
+function paintEpisodesinShow(episode) {
+    console.log(episode);
+    const containerEpisodes = document.getElementById("character-episodes");
+    const episodesInShow = document.createElement("div");
+    episodesInShow.classList.add("col-md-3", "m-2", "bg-primary", "p-3", "text-white", "div-episodes-custom");
+    episodesInShow.textContent = episode.name;
+    containerEpisodes === null || containerEpisodes === void 0 ? void 0 : containerEpisodes.appendChild(episodesInShow);
+    episodesInShow.addEventListener("click", () => {
+        showEpisodeInfo(episode);
+    });
 }
 function cleanEpisodesinShow() {
     const containerEpisodes = document.getElementById("character-episodes");
     if (containerEpisodes) {
         containerEpisodes.innerHTML = "";
     }
+}
+function showLocationInfo() {
+    console.log("dentro de location info");
 }
 //# sourceMappingURL=index.js.map

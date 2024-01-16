@@ -29,7 +29,7 @@ footer{
     max-height: 430px;
 }
 ::-webkit-scrollbar {
-    width: 12px; /* Ancho de la barra de desplazamiento */
+    width: 12px;
 }
 ::-webkit-scrollbar-thumb {
     background-color: #8FC748;
@@ -43,6 +43,11 @@ footer{
     width: 18rem;
 }
 
-/* .central-div-custom{
-    border: none;
-} */
+.div-episodes-custom{
+    background-color:#3c035f !important;
+    color:white !important;
+    text-align: center;
+    border-radius: 8px;
+    border-bottom-right-radius: 0;
+    border: 0.1rem solid #8FC748;
+}
