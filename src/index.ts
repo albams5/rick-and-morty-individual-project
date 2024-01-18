@@ -192,7 +192,7 @@ fetch(urlEpisodesOne)
         const characterProperties = document.getElementById("character-properties") as HTMLParagraphElement;
         const characterGender = document.getElementById("character-gender") as HTMLParagraphElement;
         const characterSpecies = document.getElementById("character-species") as HTMLParagraphElement;
-        const characterLocation = document.getElementById("character-location") as HTMLParagraphElement;
+        const characterLocation = document.getElementById("character-location") as HTMLAnchorElement;
     
         characterName.textContent = data.name;
         characterProperties.textContent = `Status: ${data.status}`;
@@ -249,7 +249,6 @@ fetch(urlEpisodesOne)
     function paintLocationInfo(data:Locations):void{
         cleanEpisodesinShow();
         cleanCharacterInfo();
-        cleanLocationInfo();
         const locationName = document.getElementById("location-name") as HTMLHeadingElement;
         locationName.textContent = data.name;
         const locationType = document.getElementById("location-type") as HTMLParagraphElement;
@@ -263,9 +262,4 @@ fetch(urlEpisodesOne)
             .then(response => response.json())
             .then(data => paintCharactersInfo(data))
         })
-    }
-
-    function cleanLocationInfo():void{
-        const locationCharacters = document.getElementById("central-div") as HTMLDivElement;
-        locationCharacters.innerHTML = "";
     }

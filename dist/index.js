@@ -209,7 +209,6 @@ function fetchLocationInfo(data) {
 function paintLocationInfo(data) {
     cleanEpisodesinShow();
     cleanCharacterInfo();
-    cleanLocationInfo();
     const locationName = document.getElementById("location-name");
     locationName.textContent = data.name;
     const locationType = document.getElementById("location-type");
@@ -222,10 +221,6 @@ function paintLocationInfo(data) {
             .then(response => response.json())
             .then(data => paintCharactersInfo(data));
     });
-}
-function cleanLocationInfo() {
-    const locationCharacters = document.getElementById("central-div");
-    locationCharacters.innerHTML = "";
 }
 export {};
 //# sourceMappingURL=index.js.map
