@@ -19,6 +19,20 @@ function getEpisodes(episode) {
         showEpisodeInfo(episode);
     });
 }
+function loadMoreEpisodes(url) {
+    const firstEpisodes = document.querySelectorAll(".first-episodes");
+    const firstEpisodesArray = Array.from(firstEpisodes);
+    firstEpisodesArray.forEach((episode) => {
+        episode.classList.add("d-none");
+    });
+    fetch(url)
+        .then(response => response.json())
+        .then((data) => {
+        data.results.forEach((episode) => {
+            getEpisodes(episode);
+        });
+    });
+}
 const firstBtn = document.getElementById("moreEpisodesBtn");
 const secondBtn = document.getElementById("lastEpisodesBtn");
 const thirdBtn = document.getElementById("firstEpisodesBtn");
@@ -37,18 +51,15 @@ thirdBtn.addEventListener("click", () => {
     thirdBtn.classList.add("d-none");
     firstBtn.classList.remove("d-none");
 });
-function loadMoreEpisodes(url) {
-    const firstEpisodes = document.querySelectorAll(".first-episodes");
-    const firstEpisodesArray = Array.from(firstEpisodes);
-    firstEpisodesArray.forEach((episode) => {
-        episode.classList.add("d-none");
-    });
-    fetch(url)
-        .then(response => response.json())
-        .then((data) => {
-        data.results.forEach((episode) => {
-            getEpisodes(episode);
-        });
+function showEpisodeInfo(episode) {
+    cleanCard();
+    showDivsCharacters();
+    paintEpisodeInfo(episode);
+    const characters = episode.characters;
+    characters.forEach((character) => {
+        fetch(character)
+            .then(response => response.json())
+            .then((data) => paintCharactersInfo(data));
     });
 }
 function showDivsCharacters() {
@@ -68,17 +79,6 @@ function paintEpisodeInfo(episode) {
     episodeDate.textContent = episode.air_date;
     episodeCode.textContent = episode.episode;
     centralDiv === null || centralDiv === void 0 ? void 0 : centralDiv.append(episodeTitle, episodeDate, episodeCode);
-}
-function showEpisodeInfo(episode) {
-    cleanCard();
-    showDivsCharacters();
-    paintEpisodeInfo(episode);
-    const characters = episode.characters;
-    characters.forEach((character) => {
-        fetch(character)
-            .then(response => response.json())
-            .then((data) => paintCharactersInfo(data));
-    });
 }
 function paintCharactersInfo(data) {
     cleanCharacterInfo();
@@ -166,7 +166,7 @@ function updateCharacterDetails(data) {
     characterProperties.textContent = `Status: ${data.status}`;
     characterGender.textContent = `Gender: ${data.gender}`;
     characterSpecies.textContent = `Species: ${data.species}`;
-    characterLocation.textContent = `Location: ${data.location.name}`;
+    characterLocation.textContent = `Origin: ${data.origin.name}`;
     if (!(characterLocation === null || characterLocation === void 0 ? void 0 : characterLocation.onclick)) {
         characterLocation === null || characterLocation === void 0 ? void 0 : characterLocation.addEventListener("click", () => {
             fetchLocationInfo(data.location);
@@ -183,7 +183,11 @@ function paintEpisodesinShow(episode) {
     const containerEpisodes = document.getElementById("character-episodes");
     const episodesInShow = document.createElement("div");
     episodesInShow.classList.add("col-md-3", "m-2", "bg-primary", "p-3", "text-white", "div-episodes-custom");
-    episodesInShow.textContent = episode.name;
+    const episodeName = document.createElement("p");
+    episodeName.textContent = episode.name;
+    const episodeCode = document.createElement("p");
+    episodeCode.textContent = episode.episode;
+    episodesInShow.append(episodeName, episodeCode);
     containerEpisodes === null || containerEpisodes === void 0 ? void 0 : containerEpisodes.appendChild(episodesInShow);
     episodesInShow.addEventListener("click", () => {
         showEpisodeInfo(episode);
@@ -191,9 +195,7 @@ function paintEpisodesinShow(episode) {
 }
 function cleanEpisodesinShow() {
     const containerEpisodes = document.getElementById("character-episodes");
-    if (containerEpisodes) {
-        containerEpisodes.innerHTML = "";
-    }
+    containerEpisodes.innerHTML = "";
 }
 function cleanCharacterInfo() {
     const characterMainInfo = document.getElementById("character-main-info");
@@ -202,7 +204,6 @@ function cleanCharacterInfo() {
 function fetchLocationInfo(data) {
     const locationCard = document.getElementById("location-card");
     locationCard.classList.remove("d-none");
-    console.log(data.url);
     fetch(data.url)
         .then(response => response.json())
         .then(data => paintLocationInfo(data));
