@@ -120,15 +120,13 @@ function createCharacterElement(tag, textContent) {
 }
 function cleanCard() {
     const centralDiv = document.querySelector("#central-div");
-    if (centralDiv) {
-        centralDiv.innerHTML = "";
-    }
+    centralDiv.innerHTML = "";
 }
 function showMoreCharacterInfo(data) {
     cleanCard();
     cleanEpisodesinShow();
-    hideLocationCard();
     resetCentralDiv();
+    hideLocationCard();
     showCharacterMainInfo();
     updateCharacterPic(data);
     updateCharacterDetails(data);

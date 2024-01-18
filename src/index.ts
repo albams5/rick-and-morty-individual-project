@@ -143,17 +143,15 @@ fetch(urlEpisodesOne)
 
 
     function cleanCard(){
-        const centralDiv = document.querySelector("#central-div");
-        if(centralDiv){
-            centralDiv.innerHTML = "";
-        }
+        const centralDiv = document.querySelector("#central-div") as HTMLDivElement;
+        centralDiv.innerHTML = "";
     }
 
     function showMoreCharacterInfo(data:Character){
         cleanCard();
         cleanEpisodesinShow();
-        hideLocationCard();
         resetCentralDiv();
+        hideLocationCard();
         showCharacterMainInfo();
         updateCharacterPic(data);
         updateCharacterDetails(data);
