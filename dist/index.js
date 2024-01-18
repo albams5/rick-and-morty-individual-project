@@ -1,4 +1,3 @@
-"use strict";
 const urlEpisodesOne = "https://rickandmortyapi.com/api/episode";
 const urlEpisodesTwo = "https://rickandmortyapi.com/api/episode?page=2";
 const urlEpisodesThree = "https://rickandmortyapi.com/api/episode?page=3";
@@ -9,20 +8,13 @@ fetch(urlEpisodesOne)
         getEpisodes(episode);
     });
 });
-var Status;
-(function (Status) {
-    Status["Alive"] = "ALIVE";
-    Status["Dead"] = "DEAD";
-    Status["Unknown"] = "UNKNOWN";
-})(Status || (Status = {}));
-console.log(Status.Unknown);
 function getEpisodes(episode) {
     const listGroup = document.querySelector(".list-group");
     const li = document.createElement("li");
     li.classList.add("list-group-item");
     li.classList.add("first-episodes");
     li.textContent = episode.name;
-    listGroup === null || listGroup === void 0 ? void 0 : listGroup.appendChild(li);
+    listGroup.appendChild(li);
     li.addEventListener("click", () => {
         showEpisodeInfo(episode);
     });
@@ -30,20 +22,20 @@ function getEpisodes(episode) {
 const firstBtn = document.getElementById("moreEpisodesBtn");
 const secondBtn = document.getElementById("lastEpisodesBtn");
 const thirdBtn = document.getElementById("firstEpisodesBtn");
-firstBtn === null || firstBtn === void 0 ? void 0 : firstBtn.addEventListener("click", () => {
+firstBtn.addEventListener("click", () => {
     loadMoreEpisodes(urlEpisodesTwo);
-    firstBtn === null || firstBtn === void 0 ? void 0 : firstBtn.classList.add("d-none");
-    secondBtn === null || secondBtn === void 0 ? void 0 : secondBtn.classList.remove("d-none");
+    firstBtn.classList.add("d-none");
+    secondBtn.classList.remove("d-none");
 });
-secondBtn === null || secondBtn === void 0 ? void 0 : secondBtn.addEventListener("click", () => {
+secondBtn.addEventListener("click", () => {
     loadMoreEpisodes(urlEpisodesThree);
     secondBtn.classList.add("d-none");
-    thirdBtn === null || thirdBtn === void 0 ? void 0 : thirdBtn.classList.remove("d-none");
+    thirdBtn.classList.remove("d-none");
 });
-thirdBtn === null || thirdBtn === void 0 ? void 0 : thirdBtn.addEventListener("click", () => {
+thirdBtn.addEventListener("click", () => {
     loadMoreEpisodes(urlEpisodesOne);
     thirdBtn.classList.add("d-none");
-    firstBtn === null || firstBtn === void 0 ? void 0 : firstBtn.classList.remove("d-none");
+    firstBtn.classList.remove("d-none");
 });
 function loadMoreEpisodes(url) {
     const firstEpisodes = document.querySelectorAll(".first-episodes");
@@ -59,24 +51,28 @@ function loadMoreEpisodes(url) {
         });
     });
 }
-function showEpisodeInfo(episode) {
-    console.log(episode.characters);
-    cleanCard();
+function showDivsCharacters() {
+    const locationCard = document.getElementById("location-card");
+    locationCard.classList.add("d-none");
     const characterCard = document.getElementById("character-main-info");
     const characterEpisodes = document.getElementById("character-episodes");
-    characterCard === null || characterCard === void 0 ? void 0 : characterCard.classList.add('d-none');
-    characterEpisodes === null || characterEpisodes === void 0 ? void 0 : characterEpisodes.classList.add('d-none');
+    characterCard.classList.add('d-none');
+    characterEpisodes.classList.add('d-none');
+}
+function paintEpisodeInfo(episode) {
     const centralDiv = document.getElementById("central-div");
     const episodeTitle = document.createElement("h3");
     const episodeDate = document.createElement("p");
     const episodeCode = document.createElement("p");
-    episodeTitle.classList.add("episode-title");
-    episodeDate.classList.add("episode-date");
-    episodeCode.classList.add("episode-code");
     episodeTitle.textContent = episode.name;
     episodeDate.textContent = episode.air_date;
     episodeCode.textContent = episode.episode;
     centralDiv === null || centralDiv === void 0 ? void 0 : centralDiv.append(episodeTitle, episodeDate, episodeCode);
+}
+function showEpisodeInfo(episode) {
+    cleanCard();
+    showDivsCharacters();
+    paintEpisodeInfo(episode);
     const characters = episode.characters;
     characters.forEach((character) => {
         fetch(character)
@@ -85,27 +81,42 @@ function showEpisodeInfo(episode) {
     });
 }
 function paintCharactersInfo(data) {
-    console.log(data);
+    cleanCharacterInfo();
     const centralDiv = document.querySelector("#central-div");
-    centralDiv === null || centralDiv === void 0 ? void 0 : centralDiv.classList.add("border");
-    const divCharacter = document.createElement("div");
-    divCharacter.classList.add("card", "card-custom");
-    const img = document.createElement("img");
-    img.src = data.image;
-    img.classList.add("card-img-top");
-    img.alt = data.name;
-    const cardBody = document.createElement("div");
-    cardBody.classList.add("card-body");
-    const characterName = document.createElement("h5");
-    characterName.textContent = data.name;
-    const characterStatusAndSpecies = document.createElement("p");
-    characterStatusAndSpecies.textContent = `${data.status} - ${data.species}`;
+    centralDiv.classList.add("border");
+    const divCharacter = createCharacterCard(data);
     centralDiv === null || centralDiv === void 0 ? void 0 : centralDiv.appendChild(divCharacter);
-    divCharacter.append(img, cardBody);
-    cardBody.append(characterName, characterStatusAndSpecies);
     divCharacter.addEventListener("click", () => {
         showMoreCharacterInfo(data);
     });
+}
+function createCharacterCard(data) {
+    const divCharacter = document.createElement("div");
+    divCharacter.classList.add("card", "card-custom");
+    const img = createCharacterImage(data.image, data.name);
+    const cardBody = createCardBody(data);
+    divCharacter.append(img, cardBody);
+    return divCharacter;
+}
+function createCharacterImage(src, alt) {
+    const img = document.createElement("img");
+    img.src = src;
+    img.classList.add("card-img-top");
+    img.alt = alt;
+    return img;
+}
+function createCardBody(data) {
+    const cardBody = document.createElement("div");
+    cardBody.classList.add("card-body");
+    const characterName = createCharacterElement("h5", data.name);
+    const characterStatusAndSpecies = createCharacterElement("p", `${data.status} - ${data.species}`);
+    cardBody.append(characterName, characterStatusAndSpecies);
+    return cardBody;
+}
+function createCharacterElement(tag, textContent) {
+    const element = document.createElement(tag);
+    element.textContent = textContent;
+    return element;
 }
 function cleanCard() {
     const centralDiv = document.querySelector("#central-div");
@@ -116,28 +127,51 @@ function cleanCard() {
 function showMoreCharacterInfo(data) {
     cleanCard();
     cleanEpisodesinShow();
+    hideLocationCard();
+    resetCentralDiv();
+    showCharacterMainInfo();
+    updateCharacterPic(data);
+    updateCharacterDetails(data);
+}
+function hideLocationCard() {
+    const locationCard = document.getElementById("location-card");
+    locationCard.classList.add("d-none");
+}
+function resetCentralDiv() {
     const centralDiv = document.querySelector("#central-div");
-    centralDiv === null || centralDiv === void 0 ? void 0 : centralDiv.classList.remove("border");
+    centralDiv.classList.remove("border");
     const characterMainInfo = document.getElementById("character-main-info");
     const characterEpisodes = document.getElementById("character-episodes");
-    characterMainInfo === null || characterMainInfo === void 0 ? void 0 : characterMainInfo.classList.remove("d-none");
-    characterEpisodes === null || characterEpisodes === void 0 ? void 0 : characterEpisodes.classList.remove("d-none");
+    characterMainInfo.classList.remove("d-none");
+    characterEpisodes.classList.remove("d-none");
+}
+function showCharacterMainInfo() {
+    const characterSpecies = document.getElementById("character-species");
+    const characterLocation = document.getElementById("character-location");
+    characterSpecies.classList.remove("d-none");
+    characterLocation.classList.remove("d-none");
+}
+function updateCharacterPic(data) {
     const characterPic = document.getElementById("character-pic");
-    characterPic === null || characterPic === void 0 ? void 0 : characterPic.setAttribute("src", data.image);
-    characterPic === null || characterPic === void 0 ? void 0 : characterPic.setAttribute("alt", data.name);
+    characterPic.setAttribute("src", data.image);
+    characterPic.setAttribute("alt", data.name);
+}
+function updateCharacterDetails(data) {
     const characterName = document.getElementById("character-name");
     const characterProperties = document.getElementById("character-properties");
     const characterGender = document.getElementById("character-gender");
     const characterSpecies = document.getElementById("character-species");
     const characterLocation = document.getElementById("character-location");
-    if (characterName && characterProperties && characterGender && characterSpecies && characterLocation) {
-        characterName.textContent = data.name;
-        characterProperties.textContent = `Status: ${data.status}`;
-        characterGender.textContent = `Gender: ${data.gender}`;
-        characterSpecies.textContent = `Species: ${data.species}`;
-        characterLocation.textContent = `Location: ${data.location.name}`;
+    characterName.textContent = data.name;
+    characterProperties.textContent = `Status: ${data.status}`;
+    characterGender.textContent = `Gender: ${data.gender}`;
+    characterSpecies.textContent = `Species: ${data.species}`;
+    characterLocation.textContent = `Location: ${data.location.name}`;
+    if (!(characterLocation === null || characterLocation === void 0 ? void 0 : characterLocation.onclick)) {
+        characterLocation === null || characterLocation === void 0 ? void 0 : characterLocation.addEventListener("click", () => {
+            fetchLocationInfo(data.location);
+        }, { once: true });
     }
-    characterLocation === null || characterLocation === void 0 ? void 0 : characterLocation.addEventListener("click", () => { showLocationInfo(); });
     const episodesInShow = data.episode;
     episodesInShow.forEach((episode) => {
         fetch(episode)
@@ -146,7 +180,6 @@ function showMoreCharacterInfo(data) {
     });
 }
 function paintEpisodesinShow(episode) {
-    console.log(episode);
     const containerEpisodes = document.getElementById("character-episodes");
     const episodesInShow = document.createElement("div");
     episodesInShow.classList.add("col-md-3", "m-2", "bg-primary", "p-3", "text-white", "div-episodes-custom");
@@ -162,7 +195,38 @@ function cleanEpisodesinShow() {
         containerEpisodes.innerHTML = "";
     }
 }
-function showLocationInfo() {
-    console.log("dentro de location info");
+function cleanCharacterInfo() {
+    const characterMainInfo = document.getElementById("character-main-info");
+    characterMainInfo.classList.add("d-none");
 }
+function fetchLocationInfo(data) {
+    const locationCard = document.getElementById("location-card");
+    locationCard.classList.remove("d-none");
+    console.log(data.url);
+    fetch(data.url)
+        .then(response => response.json())
+        .then(data => paintLocationInfo(data));
+}
+function paintLocationInfo(data) {
+    cleanEpisodesinShow();
+    cleanCharacterInfo();
+    cleanLocationInfo();
+    const locationName = document.getElementById("location-name");
+    locationName.textContent = data.name;
+    const locationType = document.getElementById("location-type");
+    locationType.textContent = data.type;
+    const locationDimension = document.getElementById("location-dimension");
+    locationDimension.textContent = data.dimension;
+    const residentsArray = data.residents;
+    residentsArray.forEach((resident) => {
+        fetch(resident)
+            .then(response => response.json())
+            .then(data => paintCharactersInfo(data));
+    });
+}
+function cleanLocationInfo() {
+    const locationCharacters = document.getElementById("central-div");
+    locationCharacters.innerHTML = "";
+}
+export {};
 //# sourceMappingURL=index.js.map

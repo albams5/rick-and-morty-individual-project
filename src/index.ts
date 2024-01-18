@@ -1,3 +1,5 @@
+import { Episode, Character, Locations} from "./types";
+
 const urlEpisodesOne = "https://rickandmortyapi.com/api/episode";
 const urlEpisodesTwo = "https://rickandmortyapi.com/api/episode?page=2";
 const urlEpisodesThree = "https://rickandmortyapi.com/api/episode?page=3";
@@ -10,76 +12,39 @@ fetch(urlEpisodesOne)
         })
     })
 
-    type Episode = {
-        name: string,
-        air_date: string,
-        episode: string,
-        characters: string[],
-        url: string
-    }
-
-    type Character = {
-        name: string,
-        status: Status,
-        species: string,
-        gender: string,
-        image: string,
-        location: Locations,
-        origin: Origin,
-        episode: string[],
-    }
-
-    type Origin = {
-        name: string,
-        url: string,
-    }
-    type Locations = {
-        name: string,
-        type: string,
-        dimension: string,
-        url: string,
-    }
-
-    enum Status {
-        Alive = "ALIVE",
-        Dead = "DEAD",
-        Unknown = "UNKNOWN"
-    }
-    console.log(Status.Unknown)
-
-    function getEpisodes(episode:Episode){
-        const listGroup = document.querySelector(".list-group");
+    function getEpisodes(episode:Episode):void{
+        const listGroup = document.querySelector(".list-group") as HTMLElement;
         const li = document.createElement("li");
         li.classList.add("list-group-item");
         li.classList.add("first-episodes");
         li.textContent = episode.name;
-        listGroup?.appendChild(li)
+        listGroup.appendChild(li)
         li.addEventListener("click", ()=>{
             showEpisodeInfo(episode)})
     }
 
-    const firstBtn = document.getElementById("moreEpisodesBtn");
-    const secondBtn = document.getElementById("lastEpisodesBtn");
-    const thirdBtn = document.getElementById("firstEpisodesBtn");
+    const firstBtn = document.getElementById("moreEpisodesBtn") as HTMLButtonElement;
+    const secondBtn = document.getElementById("lastEpisodesBtn") as HTMLButtonElement;
+    const thirdBtn = document.getElementById("firstEpisodesBtn") as HTMLButtonElement;
 
-    firstBtn?.addEventListener("click", ()=>{
+    firstBtn.addEventListener("click", ()=>{
         loadMoreEpisodes(urlEpisodesTwo)
-        firstBtn?.classList.add("d-none");
-        secondBtn?.classList.remove("d-none");
+        firstBtn.classList.add("d-none");
+        secondBtn.classList.remove("d-none");
     });
-    secondBtn?.addEventListener("click", ()=>{
+    secondBtn.addEventListener("click", ()=>{
         loadMoreEpisodes(urlEpisodesThree);
         secondBtn.classList.add("d-none");
-        thirdBtn?.classList.remove("d-none");
+        thirdBtn.classList.remove("d-none");
     })
-    thirdBtn?.addEventListener("click", ()=>{
+    thirdBtn.addEventListener("click", ()=>{
         loadMoreEpisodes(urlEpisodesOne);
         thirdBtn.classList.add("d-none");
-        firstBtn?.classList.remove("d-none");
+        firstBtn.classList.remove("d-none");
     })
-    function loadMoreEpisodes(url:string){
-        const firstEpisodes = document.querySelectorAll(".first-episodes");
-        const firstEpisodesArray = Array.from(firstEpisodes);
+    function loadMoreEpisodes(url:string):void{
+        const firstEpisodes:NodeListOf<Element> = document.querySelectorAll(".first-episodes");
+        const firstEpisodesArray:Element[] = Array.from(firstEpisodes);
         firstEpisodesArray.forEach((episode) =>{
             episode.classList.add("d-none");
         })
@@ -92,27 +57,36 @@ fetch(urlEpisodesOne)
             })
     }
     
-    function showEpisodeInfo(episode:Episode){
-        console.log(episode.characters)
-        cleanCard();
-        const characterCard = document.getElementById("character-main-info");
-        const characterEpisodes = document.getElementById("character-episodes");
-        characterCard?.classList.add('d-none');
-        characterEpisodes?.classList.add('d-none');
-        const centralDiv = document.getElementById("central-div");
-        const episodeTitle = document.createElement("h3");
-        const episodeDate = document.createElement("p");
-        const episodeCode = document.createElement("p");
+    function showDivsCharacters(){
+        const locationCard = document.getElementById("location-card") as HTMLDivElement;
+        locationCard.classList.add("d-none");
+        const characterCard = document.getElementById("character-main-info") as HTMLElement;
+        const characterEpisodes = document.getElementById("character-episodes") as HTMLElement;
+        characterCard.classList.add('d-none');
+        characterEpisodes.classList.add('d-none');
+    }
 
-        episodeTitle.classList.add("episode-title");
-        episodeDate.classList.add("episode-date");
-        episodeCode.classList.add("episode-code");
+    function paintEpisodeInfo(episode:Episode){
+        const centralDiv = document.getElementById("central-div") as HTMLDivElement;
+        const episodeTitle = document.createElement("h3") as HTMLHeadingElement;
+        const episodeDate = document.createElement("p") as HTMLParagraphElement;
+        const episodeCode = document.createElement("p") as HTMLParagraphElement;
+
+        // episodeTitle.classList.add("episode-title");
+        // episodeDate.classList.add("episode-date");
+        // episodeCode.classList.add("episode-code");
         
         episodeTitle.textContent = episode.name;
         episodeDate.textContent = episode.air_date;
         episodeCode.textContent = episode.episode;
         
         centralDiv?.append(episodeTitle, episodeDate, episodeCode);
+    }
+
+    function showEpisodeInfo(episode:Episode){
+        cleanCard();
+        showDivsCharacters();
+        paintEpisodeInfo(episode);
         
         const characters = episode.characters;
         characters.forEach((character:string)=>{
@@ -123,29 +97,53 @@ fetch(urlEpisodesOne)
     }
 
     function paintCharactersInfo(data:Character){
-        console.log(data)
-        const centralDiv = document.querySelector("#central-div");
-        centralDiv?.classList.add("border");
-        const divCharacter = document.createElement("div");
+        cleanCharacterInfo();
+        const centralDiv = document.querySelector("#central-div") as HTMLDivElement;
+        centralDiv.classList.add("border");
+        const divCharacter = createCharacterCard(data);
+        centralDiv?.appendChild(divCharacter);
+
+        divCharacter.addEventListener("click", () => {
+            showMoreCharacterInfo(data);
+        });
+    }
+
+    function createCharacterCard(data: Character): HTMLDivElement {
+        const divCharacter = document.createElement("div") as HTMLDivElement;
         divCharacter.classList.add("card", "card-custom");
-        const img = document.createElement("img");
-        img.src = data.image;
+    
+        const img = createCharacterImage(data.image, data.name);
+        const cardBody = createCardBody(data);
+    
+        divCharacter.append(img, cardBody);
+        return divCharacter;
+    }
+    
+    function createCharacterImage(src: string, alt: string): HTMLImageElement {
+        const img = document.createElement("img") as HTMLImageElement;
+        img.src = src;
         img.classList.add("card-img-top");
-        img.alt = data.name;
+        img.alt = alt;
+        return img;
+    }
+
+    function createCardBody(data: Character): HTMLDivElement {
         const cardBody = document.createElement("div");
         cardBody.classList.add("card-body");
-        const characterName = document.createElement("h5");
-        characterName.textContent = data.name;
-        const characterStatusAndSpecies = document.createElement("p");
-        characterStatusAndSpecies.textContent = `${data.status} - ${data.species}`;
-        centralDiv?.appendChild(divCharacter);
-        divCharacter.append(img, cardBody);
+    
+        const characterName = createCharacterElement("h5", data.name);
+        const characterStatusAndSpecies = createCharacterElement("p", `${data.status} - ${data.species}`);
+    
         cardBody.append(characterName, characterStatusAndSpecies);
-
-        divCharacter.addEventListener("click", ()=>{
-                showMoreCharacterInfo(data);
-            })
+        return cardBody;
     }
+    
+    function createCharacterElement(tag: string, textContent: string): HTMLElement {
+        const element = document.createElement(tag);
+        element.textContent = textContent;
+        return element;
+    }
+
 
     function cleanCard(){
         const centralDiv = document.querySelector("#central-div");
@@ -157,41 +155,70 @@ fetch(urlEpisodesOne)
     function showMoreCharacterInfo(data:Character){
         cleanCard();
         cleanEpisodesinShow();
-        const centralDiv = document.querySelector("#central-div");
-        centralDiv?.classList.remove("border");
-        const characterMainInfo = document.getElementById("character-main-info");
-        const characterEpisodes = document.getElementById("character-episodes");
-        characterMainInfo?.classList.remove("d-none");
-        characterEpisodes?.classList.remove("d-none");
+        hideLocationCard();
+        resetCentralDiv();
+        showCharacterMainInfo();
+        updateCharacterPic(data);
+        updateCharacterDetails(data);
+    }
 
-        const characterPic = document.getElementById("character-pic");
-        characterPic?.setAttribute("src", data.image);
-        characterPic?.setAttribute("alt", data.name);
-        const characterName = document.getElementById("character-name");
-        const characterProperties = document.getElementById("character-properties");
-        const characterGender = document.getElementById("character-gender");
-        const characterSpecies = document.getElementById("character-species");
-        const characterLocation = document.getElementById("character-location");
-        if(characterName && characterProperties && characterGender && characterSpecies && characterLocation){
-            characterName.textContent = data.name;
-            characterProperties.textContent = `Status: ${data.status}`;
-            characterGender.textContent = `Gender: ${data.gender}`;
-            characterSpecies.textContent = `Species: ${data.species}`;
-            characterLocation.textContent = `Location: ${data.location.name}`;
+    function hideLocationCard() {
+        const locationCard = document.getElementById("location-card") as HTMLDivElement;
+        locationCard.classList.add("d-none");
+    }
+    
+    function resetCentralDiv() {
+        const centralDiv = document.querySelector("#central-div") as HTMLDivElement;
+        centralDiv.classList.remove("border");
+    
+        const characterMainInfo = document.getElementById("character-main-info") as HTMLDivElement;
+        const characterEpisodes = document.getElementById("character-episodes") as HTMLDivElement;
+    
+        characterMainInfo.classList.remove("d-none");
+        characterEpisodes.classList.remove("d-none");
+    }
+    
+    function showCharacterMainInfo() {
+        const characterSpecies = document.getElementById("character-species") as HTMLParagraphElement;
+        const characterLocation = document.getElementById("character-location") as HTMLParagraphElement;
+    
+        characterSpecies.classList.remove("d-none");
+        characterLocation.classList.remove("d-none");
+    }
+
+    function updateCharacterPic(data: Character) {
+        const characterPic = document.getElementById("character-pic") as HTMLHeadingElement;
+        characterPic.setAttribute("src", data.image);
+        characterPic.setAttribute("alt", data.name);
+    }
+    
+    function updateCharacterDetails(data: Character) {
+        const characterName = document.getElementById("character-name") as HTMLHeadingElement;
+        const characterProperties = document.getElementById("character-properties") as HTMLParagraphElement;
+        const characterGender = document.getElementById("character-gender") as HTMLParagraphElement;
+        const characterSpecies = document.getElementById("character-species") as HTMLParagraphElement;
+        const characterLocation = document.getElementById("character-location") as HTMLParagraphElement;
+    
+        characterName.textContent = data.name;
+        characterProperties.textContent = `Status: ${data.status}`;
+        characterGender.textContent = `Gender: ${data.gender}`;
+        characterSpecies.textContent = `Species: ${data.species}`;
+        characterLocation.textContent = `Location: ${data.location.name}`;
+        
+        if (!characterLocation?.onclick) {
+            characterLocation?.addEventListener("click", () => {
+                fetchLocationInfo(data.location);
+            }, { once: true });
         }
-
-        characterLocation?.addEventListener("click", ()=>{showLocationInfo()})
-
-        const episodesInShow = data.episode;
+        const episodesInShow:string[] = data.episode;
             episodesInShow.forEach((episode)=>{
                 fetch(episode)
                 .then(response => response.json())
                 .then((episode)=>paintEpisodesinShow(episode))
             })
     }
-
+/////////////////////////////////////////////
     function paintEpisodesinShow(episode:Episode){
-        console.log(episode);
         const containerEpisodes = document.getElementById("character-episodes");
         const episodesInShow = document.createElement("div");
         episodesInShow.classList.add("col-md-3", "m-2", "bg-primary", "p-3", "text-white", "div-episodes-custom");
@@ -209,6 +236,41 @@ fetch(urlEpisodesOne)
         }
     }
 
-    function showLocationInfo(){
-        console.log("dentro de location info")
+    function cleanCharacterInfo(){
+        const characterMainInfo = document.getElementById("character-main-info") as HTMLDivElement;
+        characterMainInfo.classList.add("d-none");
+
+    }
+
+    function fetchLocationInfo(data:Locations){
+        const locationCard = document.getElementById("location-card") as HTMLDivElement;
+        locationCard.classList.remove("d-none");
+        console.log(data.url);
+        fetch(data.url)
+            .then(response => response.json())
+            .then(data => paintLocationInfo(data))
+    }
+
+    function paintLocationInfo(data:Locations){
+        cleanEpisodesinShow();
+        cleanCharacterInfo();
+        cleanLocationInfo();
+        const locationName = document.getElementById("location-name") as HTMLHeadingElement;
+        locationName.textContent = data.name;
+        const locationType = document.getElementById("location-type") as HTMLParagraphElement;
+        locationType.textContent = data.type;
+        const locationDimension = document.getElementById("location-dimension") as HTMLParagraphElement;
+        locationDimension.textContent = data.dimension;
+
+        const residentsArray = data.residents;
+        residentsArray.forEach((resident)=>{
+            fetch(resident)
+            .then(response => response.json())
+            .then(data => paintCharactersInfo(data))
+        })
+    }
+
+    function cleanLocationInfo(){
+        const locationCharacters = document.getElementById("central-div") as HTMLDivElement;
+        locationCharacters.innerHTML = "";
     }

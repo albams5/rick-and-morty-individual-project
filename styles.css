@@ -1,7 +1,7 @@
 header{
     background-color: #3c035f;
 }
-header h2{
+header h1{
     color: white;
 }
 footer{
@@ -50,4 +50,8 @@ footer{
     border-radius: 8px;
     border-bottom-right-radius: 0;
     border: 0.1rem solid #8FC748;
+}
+
+.font-edit{
+    font-family: 'Silkscreen', sans-serif;
 }
