@@ -41,6 +41,7 @@
 
 
 *PROBLEMAS:
+
 -Darme cuenta que al crear los types, el nombre tiene que coincidir con el nombre usado en la api: episode_code vs episode en la api.
 
 -Diseño con bootstrap: limitante pero a la vez rápido, armonioso y responsive.
@@ -51,5 +52,7 @@
 *LECCIONES APRENDIDAS:
 
 -Uso y manejo de las API.
+
 -Uso y manejo de Typescript. Ganar confianza con los types y enums.
+
 -Uso y manejo de Bootstrap y sus clases.
