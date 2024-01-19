@@ -38,16 +38,16 @@
 *DIA 10:
 
 -Arreglar apartado location info
-*
-*
+
+
 *PROBLEMAS:
 -Darme cuenta que al crear los types, el nombre tiene que coincidir con el nombre usado en la api: episode_code vs episode en la api.
 
 -Diseño con bootstrap: limitante pero a la vez rápido, armonioso y responsive.
 
 -Conseguir que una vez mostrando la ficha de un personaje concreto, al clicar en un episodio, desapareciera esta ficha.
-*
-*
+
+
 *LECCIONES APRENDIDAS:
 
 -Uso y manejo de las API.
