@@ -13,7 +13,7 @@ function getEpisodes(episode) {
     const li = document.createElement("li");
     li.classList.add("list-group-item");
     li.classList.add("first-episodes");
-    li.textContent = episode.name;
+    li.textContent = episode.episode + ": " + episode.name;
     listGroup.appendChild(li);
     li.addEventListener("click", () => {
         showEpisodeInfo(episode);
@@ -167,7 +167,7 @@ function updateCharacterDetails(data) {
     characterLocation.textContent = `Origin: ${data.origin.name}`;
     if (!(characterLocation === null || characterLocation === void 0 ? void 0 : characterLocation.onclick)) {
         characterLocation === null || characterLocation === void 0 ? void 0 : characterLocation.addEventListener("click", () => {
-            fetchLocationInfo(data.location);
+            fetchLocationInfo(data);
         }, { once: true });
     }
     const episodesInShow = data.episode;
@@ -202,7 +202,7 @@ function cleanCharacterInfo() {
 function fetchLocationInfo(data) {
     const locationCard = document.getElementById("location-card");
     locationCard.classList.remove("d-none");
-    fetch(data.url)
+    fetch(data.origin.url)
         .then(response => response.json())
         .then(data => paintLocationInfo(data));
 }

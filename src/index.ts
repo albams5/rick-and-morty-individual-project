@@ -17,7 +17,7 @@ fetch(urlEpisodesOne)
         const li = document.createElement("li");
         li.classList.add("list-group-item");
         li.classList.add("first-episodes");
-        li.textContent = episode.name;
+        li.textContent = episode.episode + ": " + episode.name;
         listGroup.appendChild(li)
         li.addEventListener("click", ()=>{
             showEpisodeInfo(episode)})
@@ -199,10 +199,9 @@ fetch(urlEpisodesOne)
         characterGender.textContent = `Gender: ${data.gender}`;
         characterSpecies.textContent = `Species: ${data.species}`;
         characterLocation.textContent = `Origin: ${data.origin.name}`;
-        
         if (!characterLocation?.onclick) {
             characterLocation?.addEventListener("click", () => {
-                fetchLocationInfo(data.location);
+                fetchLocationInfo(data);
             }, { once: true });
         }
         const episodesInShow:string[] = data.episode;
@@ -238,10 +237,10 @@ fetch(urlEpisodesOne)
         characterMainInfo.classList.add("d-none");
     }
 
-    function fetchLocationInfo(data:Locations):void{
+    function fetchLocationInfo(data:Character):void{
         const locationCard = document.getElementById("location-card") as HTMLDivElement;
         locationCard.classList.remove("d-none");
-        fetch(data.url)
+        fetch(data.origin.url)
             .then(response => response.json())
             .then(data => paintLocationInfo(data))
     }
