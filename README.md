@@ -51,5 +51,7 @@
 *LESSONS LEARNED:
 
 -Usage and handling of APIs.
+
 -Usage and handling of TypeScript. Gain confidence with types and enums.
+
 -Usage and handling of Bootstrap and its classes.
