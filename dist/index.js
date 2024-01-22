@@ -53,7 +53,7 @@ thirdBtn.addEventListener("click", () => {
 });
 function showEpisodeInfo(episode) {
     cleanCard();
-    showDivsCharacters();
+    hideDivsCharacters();
     paintEpisodeInfo(episode);
     const characters = episode.characters;
     characters.forEach((character) => {
@@ -62,7 +62,7 @@ function showEpisodeInfo(episode) {
             .then((data) => paintCharactersInfo(data));
     });
 }
-function showDivsCharacters() {
+function hideDivsCharacters() {
     const locationCard = document.getElementById("location-card");
     locationCard.classList.add("d-none");
     const characterCard = document.getElementById("character-main-info");
@@ -206,9 +206,13 @@ function fetchLocationInfo(data) {
         .then(response => response.json())
         .then(data => paintLocationInfo(data));
 }
+let value = false;
 function paintLocationInfo(data) {
     cleanEpisodesinShow();
     cleanCharacterInfo();
+    if (value)
+        return;
+    value = true;
     const locationName = document.getElementById("location-name");
     locationName.textContent = data.name;
     const locationType = document.getElementById("location-type");
@@ -221,6 +225,7 @@ function paintLocationInfo(data) {
             .then(response => response.json())
             .then(data => paintCharactersInfo(data));
     });
+    setTimeout(() => { value = false; }, 2000);
 }
 export {};
 //# sourceMappingURL=index.js.map

@@ -60,7 +60,7 @@ fetch(urlEpisodesOne)
 
     function showEpisodeInfo(episode:Episode){
         cleanCard();
-        showDivsCharacters();
+        hideDivsCharacters();
         paintEpisodeInfo(episode);
         
         const characters = episode.characters;
@@ -71,7 +71,7 @@ fetch(urlEpisodesOne)
         })
     }
 
-    function showDivsCharacters(){
+    function hideDivsCharacters(){
         const locationCard = document.getElementById("location-card") as HTMLDivElement;
         locationCard.classList.add("d-none");
         const characterCard = document.getElementById("character-main-info") as HTMLElement;
@@ -245,9 +245,13 @@ fetch(urlEpisodesOne)
             .then(data => paintLocationInfo(data))
     }
 
+    let value = false
+
     function paintLocationInfo(data:Locations):void{
         cleanEpisodesinShow();
         cleanCharacterInfo();
+        if(value) return
+        value = true
         const locationName = document.getElementById("location-name") as HTMLHeadingElement;
         locationName.textContent = data.name;
         const locationType = document.getElementById("location-type") as HTMLParagraphElement;
@@ -261,4 +265,5 @@ fetch(urlEpisodesOne)
             .then(response => response.json())
             .then(data => paintCharactersInfo(data))
         })
+    setTimeout(() => {value = false}, 2000);
     }
