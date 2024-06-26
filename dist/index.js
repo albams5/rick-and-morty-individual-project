@@ -13,6 +13,7 @@ function getEpisodes(episode) {
     const li = document.createElement("li");
     li.classList.add("list-group-item");
     li.classList.add("first-episodes");
+    li.classList.add("clickable");
     li.textContent = episode.episode + ": " + episode.name;
     listGroup.appendChild(li);
     li.addEventListener("click", () => {
@@ -160,6 +161,7 @@ function updateCharacterDetails(data) {
     const characterGender = document.getElementById("character-gender");
     const characterSpecies = document.getElementById("character-species");
     const characterLocation = document.getElementById("character-location");
+    characterLocation.classList.add("clickable")
     characterName.textContent = data.name;
     characterProperties.textContent = `Status: ${data.status}`;
     characterGender.textContent = `Gender: ${data.gender}`;
